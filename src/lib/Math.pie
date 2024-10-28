@@ -1,5 +1,5 @@
-(claim + (-> Nat Nat   Nat))
-(define + (lambda (a b)
+(claim  + (->      Nat Nat   Nat))
+(define + (lambda (a   b  )
   (rec-Nat 
     a
     b
@@ -9,8 +9,8 @@
   )
 ))
 
-(claim * (-> Nat Nat   Nat))
-(define * (lambda (a b)
+(claim  * (->      Nat Nat   Nat))
+(define * (lambda (a   b  )
   (rec-Nat
     a
     0

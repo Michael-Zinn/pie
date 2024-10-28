@@ -1,20 +1,19 @@
 ; TODO rewrite this as type aliases for HList
 
-(claim  Tuple3 (->      U U U  U                   ))
-(define Tuple3 (lambda (a b c) (Pair a (Pair b c ))))
+(claim  Tuple3 (->                U       U       U   U))
+(define Tuple3 (lambda           (a       b       c) 
+                 (Pair            a (Pair b       c))))
+(claim  tuple3Of (Pi (           (A U)   (B U)   (C U))
+                  (->             A       B       C
+                    (Tuple3       A       B       C))))
+(define tuple3Of (lambda  (       A       B       C)
+                   (lambda       (a       b       c)
+                     (the (Tuple3 A       B       C)
+                       (cons      a (cons b       c))))))
 
-(claim tuple3Of (Pi (            (A U)   (B U) (C U))
-                  (->             A       B     C
-                    (Tuple3       A       B     C))))
-(define tuple3Of (lambda  (       A       B     C)
-                   (lambda       (a       b     c)
-                     (the (Tuple3 A       B     C)
-                       (cons      a (cons b     c))))))
-
-(claim  Tuple5 (->      U       U       U       U U   U))
-(define Tuple5 (lambda (a       b       c       d e)
-                 (Pair  a (Pair b (Pair c (Pair d e))))))
-
+(claim  Tuple5 (->                U       U       U       U     U   U))
+(define Tuple5 (lambda           (a       b       c       d     e)
+                 (Pair            a (Pair b (Pair c (Pair d     e))))))
 (claim  tuple5Of (Pi            ((A U)   (B U)   (C U)   (D U) (E U))
                    (->            A       B       C       D     E
                      (Tuple5      A       B       C       D     E))))

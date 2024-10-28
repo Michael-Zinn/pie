@@ -21,10 +21,10 @@ include(`src/lib/Tuples.pie')
   (List Atom)   ; items
   (List Atom))) ; exits
 
-(claim  roomOf (->         Atom Atom                Atom              (List Atom) (List Atom)    Room))
-(define roomOf (lambda    (id   initial-description later-description items       exits      )
-                  ((tuple5 Atom Atom                Atom              (List Atom) (List Atom))
-                           id   initial-description later-description items       exits      )))   
+(claim  roomOf (->           Atom Atom                Atom              (List Atom) (List Atom)    Room))
+(define roomOf (lambda      (id   initial-description later-description items       exits      )
+                  ((tuple5Of Atom Atom                Atom              (List Atom) (List Atom))
+                             id   initial-description later-description items       exits      )))   
 
 (claim .id                  (-> Room    Atom    ))(define .id                  (lambda (room) (car                  room    )))
 (claim .initial-description (-> Room    Atom    ))(define .initial-description (lambda (room) (car             (cdr room)   )))
