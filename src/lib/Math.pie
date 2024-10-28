@@ -1,0 +1,21 @@
+(claim + (-> Nat Nat   Nat))
+(define + (lambda (a b)
+  (rec-Nat 
+    a
+    b
+    (lambda (a-1 result)
+      (add1 result)
+    )
+  )
+))
+
+(claim * (-> Nat Nat   Nat))
+(define * (lambda (a b)
+  (rec-Nat
+    a
+    0
+    (lambda (a-1 result)
+      (+ b result)
+    )
+  )
+))

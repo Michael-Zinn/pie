@@ -1,0 +1,65 @@
+#lang pie
+
+include(`src/lib/Collections.pie')
+include(`src/lib/Math.pie')
+include(`src/lib/Tuples.pie')
+
+; signalis
+
+;{record Room
+;  id Atom
+;  initial-description Atom
+;  later-description Atom
+;  items (List Atom)
+;  exits (List Atom)}
+
+(claim Room U)
+(define Room (Tuple5
+  Atom          ; room ID
+  Atom          ; initial description
+  Atom          ; later description
+  (List Atom)   ; items
+  (List Atom))) ; exits
+
+(claim  roomOf (->         Atom Atom                Atom              (List Atom) (List Atom)    Room))
+(define roomOf (lambda    (id   initial-description later-description items       exits      )
+                  ((tuple5 Atom Atom                Atom              (List Atom) (List Atom))
+                           id   initial-description later-description items       exits      )))   
+
+(claim .id                  (-> Room    Atom    ))(define .id                  (lambda (room) (car                  room    )))
+(claim .initial-description (-> Room    Atom    ))(define .initial-description (lambda (room) (car             (cdr room)   )))
+(claim .later-description   (-> Room    Atom    ))(define .later-description   (lambda (room) (car        (cdr (cdr room))  )))
+(claim .items               (-> Room (List Atom)))(define .items               (lambda (room) (car   (cdr (cdr (cdr room))) )))
+(claim .exits               (-> Room (List Atom)))(define .exits               (lambda (room)   (cdr (cdr (cdr (cdr room)))) ))
+
+(claim  rooms (Map Atom Room))
+(define rooms ((associateBy Atom Room) .id (::
+
+  (roomOf
+    'Cryochamber 
+    'You-awake-from-cryosleep---You-should-check-on-Ariane
+    'The-cryo-sleep-chamber
+    nil
+    (:: 'Corridor nil)) (::
+
+  (roomOf
+    'Corridor
+    'You-enter-the-corridor-next-to-the-cryo-room---The-cold-steel-walls-give-it-an-eerie-aura
+    'The-corridor-next-to-the-cryo-room
+    (:: 'ducttape nil)
+    (:: 'Cryochamber nil))
+
+  nil))))
+
+;It's not really playable yet, so lets print all rooms instead.
+rooms
+
+;state ?
+(claim location Atom)
+(define location 'Cryochamber)
+
+;(claim look Atom)
+;(define look (.initial-description location))
+
+;(claim exits (List Atom))
+;(define exits (.exits location))
