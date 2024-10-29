@@ -30,10 +30,11 @@
   (lambda        (ValueT value)
     (right               value)))
 
-#;(claim Maybe.map (-> (-> A B) (Maybe A)   (Maybe B)))
-#;(define Maybe.map (lambda (f maybe)
+(claim Maybe.map (Pi      ([A U] [B U]) (-> (-> A B) (Maybe A) (Maybe B))))
+(define Maybe.map (lambda ( A     B   ) (lambda (f maybeA)
+  (Either.mapRight Trivial A B f maybeA)
+)))
 
-))
 
 
 ; == Map ==
