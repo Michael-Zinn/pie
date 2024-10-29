@@ -1,4 +1,19 @@
-; Maybe
+; == Either ==
+
+(claim  Either.mapRight (Pi     ([LeftT U] [OldRightT U] [NewRightT U]) (->      (-> OldRightT NewRightT) (Either LeftT OldRightT)   (Either LeftT NewRightT))))
+(define Either.mapRight (lambda ( LeftT     OldRightT     NewRightT   ) (lambda (f                        either                  )
+  (ind-Either
+    either
+    (lambda (oldEither) (Either LeftT NewRightT))
+    (lambda (l) (left l))
+    (lambda (r) (right (f r)))
+  )
+)))
+
+
+
+; == Maybe ==
+
 (claim  Maybe (->       U          U                      ))
 (define Maybe (lambda ( ValueT   ) (Either Trivial ValueT)))
 
@@ -15,9 +30,14 @@
   (lambda        (ValueT value)
     (right               value)))
 
+#;(claim Maybe.map (-> (-> A B) (Maybe A)   (Maybe B)))
+#;(define Maybe.map (lambda (f maybe)
+
+))
 
 
-; Map
+; == Map ==
+
 ; Not sure how equality will work, keys might need to be restricted to Nats.
 (claim  Map (->                  U        U         U))
 (define Map (lambda            [ KeyT     ValueT   ]

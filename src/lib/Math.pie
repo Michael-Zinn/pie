@@ -1,3 +1,20 @@
+(claim  ++ (->      Nat  Nat     ))
+(define ++ (lambda (x  ) (add1 x)))
+
+(claim  unsafeSubtract1 (->      Nat   Nat))
+(define unsafeSubtract1 (lambda (x  )
+  (which-Nat
+    x
+    0 ; returns 0 if the result would have been negative
+    (lambda (target-1) target-1))))
+
+(claim -- (-> Nat (Maybe Nat)))
+(define -- (lambda (x)
+  (which-Nat
+    x
+    (nothing Nat)
+    (lambda (target-1) (just Nat target-1)))))
+
 (claim  + (->      Nat Nat   Nat))
 (define + (lambda (a   b  )
   (rec-Nat 
