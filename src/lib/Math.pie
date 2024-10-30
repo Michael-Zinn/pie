@@ -3,14 +3,14 @@
   (which-Nat
     x
     0 ; returns 0 if the result would have been negative
-    (lambda (target-1) target-1))))
+    (lambda (x-1) x-1))))
 
 (claim  subtract1 (->      Nat   (Maybe Nat)))
 (define subtract1 (lambda (x  )
   (which-Nat
     x
     (nothing Nat)
-    (lambda (target-1) (just Nat target-1)))))
+    (lambda (x-1) (just Nat x-1)))))
 
 (claim  + (->      Nat Nat   Nat))
 (define + (lambda (a   b  )
@@ -35,4 +35,3 @@
     0
     (lambda (a-1 result)
       (+ b result)))))
-      

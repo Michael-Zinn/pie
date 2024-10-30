@@ -1,0 +1,16 @@
+(claim  Boolean U                       )
+(define Boolean (Either Trivial Trivial))
+
+(claim  true    Boolean                 )
+(define true    (right sole)            )
+
+(claim  false   Boolean                 )
+(define false   (left sole)             )
+
+(claim  if (Pi     ([ResultT U]) (->      Boolean   ResultT ResultT   ResultT)))
+(define if (lambda ( ResultT   ) (lambda (condition then    else   )
+  (ind-Either
+    condition
+    (lambda (condition) ResultT)
+    (lambda (l) else)
+    (lambda (r) then)))))

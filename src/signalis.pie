@@ -1,6 +1,7 @@
 #lang pie
 
 include(`src/lib/Collections.pie')
+include(`src/lib/Logic.pie')
 include(`src/lib/Math.pie')
 include(`src/lib/Tuples.pie')
 
@@ -21,16 +22,16 @@ include(`src/lib/Tuples.pie')
   (List Atom)   ; items
   (List Atom))) ; exits
 
-(claim  roomOf (->           Atom Atom                Atom              (List Atom) (List Atom)    Room))
-(define roomOf (lambda      (id   initial-description later-description items       exits      )
-                  ((tuple5Of Atom Atom                Atom              (List Atom) (List Atom))
-                             id   initial-description later-description items       exits      )))   
+(claim  roomOf (->          Atom Atom                Atom            (List Atom) (List Atom)    Room))
+(define roomOf (lambda     (id   initialDescription laterDescription items       exits      )
+                 ((tuple5Of Atom Atom                Atom            (List Atom) (List Atom))
+                            id   initialDescription laterDescription items       exits      )))   
 
-(claim .id                  (-> Room    Atom    ))(define .id                  (lambda (room) (car                  room    )))
-(claim .initial-description (-> Room    Atom    ))(define .initial-description (lambda (room) (car             (cdr room)   )))
-(claim .later-description   (-> Room    Atom    ))(define .later-description   (lambda (room) (car        (cdr (cdr room))  )))
-(claim .items               (-> Room (List Atom)))(define .items               (lambda (room) (car   (cdr (cdr (cdr room))) )))
-(claim .exits               (-> Room (List Atom)))(define .exits               (lambda (room)   (cdr (cdr (cdr (cdr room)))) ))
+(claim .id                 (-> Room    Atom    ))(define .id                 (lambda (room) (car                  room    )))
+(claim .initialDescription (-> Room    Atom    ))(define .initialDescription (lambda (room) (car             (cdr room)   )))
+(claim .laterDescription   (-> Room    Atom    ))(define .laterDescription   (lambda (room) (car        (cdr (cdr room))  )))
+(claim .items              (-> Room (List Atom)))(define .items              (lambda (room) (car   (cdr (cdr (cdr room))) )))
+(claim .exits              (-> Room (List Atom)))(define .exits              (lambda (room)   (cdr (cdr (cdr (cdr room)))) ))
 
 (claim  rooms (Map Atom Room))
 (define rooms ((associateBy Atom Room) .id (::
@@ -55,7 +56,7 @@ include(`src/lib/Tuples.pie')
 rooms
 
 ;state ?
-(claim location Atom)
+(claim  location Atom)
 (define location 'Cryochamber)
 
 ;(claim look Atom)
