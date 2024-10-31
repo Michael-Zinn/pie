@@ -12,7 +12,7 @@
                        (cons      a (cons b     c)) ))))
 
 (claim  Tuple5 (->                U       U       U       U     U    U))
-(define Tuple5 (lambda          ( a       b       c       d     e)
+(define Tuple5 (lambda          ( a       b       c       d     e   )
                  (Pair            a (Pair b (Pair c (Pair d     e))))))
 (claim  tuple5Of (Pi            ((A U)   (B U)   (C U)   (D U) (E U))
                    (->            A       B       C       D     E

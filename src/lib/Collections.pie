@@ -1,12 +1,32 @@
 ; == Either ==
 
+(claim  Either.mapLeft (Pi     ([OldLeftT U] [NewLeftT U] [RightT U]) (->      (-> OldLeftT NewLeftT) (Either OldLeftT RightT)   (Either NewLeftT RightT))))
+(define Either.mapLeft (lambda ( OldLeftT     NewLeftT     RightT   ) (lambda (f                      either                  )
+  (ind-Either
+    either
+    (lambda (oldEither) (Either NewLeftT   RightT ))
+    (lambda (l        ) (       left (f l)        ))
+    (lambda (r        ) (                  right r))
+  )
+)))
+
 (claim  Either.mapRight (Pi     ([LeftT U] [OldRightT U] [NewRightT U]) (->      (-> OldRightT NewRightT) (Either LeftT OldRightT)   (Either LeftT NewRightT))))
 (define Either.mapRight (lambda ( LeftT     OldRightT     NewRightT   ) (lambda (f                        either                  )
   (ind-Either
     either
-    (lambda (oldEither) (Either LeftT NewRightT))
-    (lambda (l) (left l))
-    (lambda (r) (right (f r)))
+    (lambda (oldEither) (Either LeftT  NewRightT  ))
+    (lambda (l        ) (       left l            ))
+    (lambda (r        ) (              right (f r)))
+  )
+)))
+
+(claim  Either.flatMapLeft (Pi     ([OldLeftT U] [NewLeftT U] [RightT U]) (->      (-> OldLeftT (Either NewLeftT RightT)) (Either OldLeftT RightT)   (Either NewLeftT RightT))))
+(define Either.flatMapLeft (lambda ( OldLeftT     NewLeftT     RightT   ) (lambda (f                                      either                  )
+  (ind-Either
+    either
+    (lambda (oldEither) (Either NewLeftT RightT ))
+    (lambda (l        ) (       f l             ))
+    (lambda (r        ) (                right r))
   )
 )))
 
@@ -16,28 +36,31 @@
     either
     (lambda (oldEither) (Either LeftT NewRightT))
     (lambda (l) (left l))
-    (lambda (r)  (f r)  )
+    (lambda (r) (f    r))
   )
 )))
+
 
 
 ; == Maybe ==
 
 (claim  Maybe   (->       U                      U                      ))
-(define Maybe   (lambda ( ValueT   )             (Either Trivial ValueT)))
+(define Maybe   (lambda ( ValueT   )             (Either ValueT Trivial)))
 
-(claim  nothing (Pi     ([ValueT U])             (Maybe          ValueT)))
-(define nothing (lambda ( ValueT   )             (left   sole          )))
+(claim  nothing (Pi     ([ValueT U])             (Maybe  ValueT        )))
+(define nothing (lambda ( ValueT   )             (right         sole   )))
 
-(claim  just    (Pi     ([ValueT U]) (-> ValueT  (Maybe          ValueT))))
-(define just    (lambda ( ValueT         value ) (right          value )))
+(claim  just    (Pi     ([ValueT U]) (-> ValueT  (Maybe  ValueT       ))))
+(define just    (lambda ( ValueT         value ) (left   value         )))
 
 
-(claim  Maybe.map     (Pi     ([A U] [B U]) (->      (-> A B        ) (Maybe A)    (Maybe                         B         ))))
-(define Maybe.map     (lambda ( A     B   ) (lambda (f                maybeA   )   (Either.mapRight     Trivial A B f maybeA))))
+(claim  Maybe.map     (Pi     ([A U] [B U]) (->      (-> A B        ) (Maybe A)    (Maybe                B                 ))))
+(define Maybe.map     (lambda ( A     B   ) (lambda (f                maybeA   )   (Either.mapLeft     A B Trivial f maybeA))))
 
-(claim  Maybe.flatMap (Pi     ([A U] [B U]) (->      (-> A (Maybe B)) (Maybe A)    (Maybe                         B         ))))
-(define Maybe.flatMap (lambda ( A     B   ) (lambda (f                maybeA   )   (Either.flatMapRight Trivial A B f maybeA))))
+(claim  Maybe.flatMap (Pi     ([A U] [B U]) (->      (-> A (Maybe B)) (Maybe A)    (Maybe                B                 ))))
+(define Maybe.flatMap (lambda ( A     B   ) (lambda (f                maybeA   )   (Either.flatMapLeft A B Trivial f maybeA))))
+
+
 
 ; == Map ==
 
