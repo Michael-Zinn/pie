@@ -64,3 +64,19 @@ rooms
 
 ;(claim exits (List Atom))
 ;(define exits (.exits location))
+
+(claim example (Pair Atom (List (Pair Atom Nat))))
+(define example
+  (cons
+    'This-is-the-description-text---What-do-you-want-to-do
+    (the (List (Pair Atom Nat))
+    (:: (the (Pair Atom Nat) (cons 'do-this 123))
+        (:: (the (Pair Atom Nat) (cons 'do-thi-other-thing 456))
+            (the (List (Pair Atom Nat)) nil)
+        )
+    ))
+  )
+)
+example
+
+'okay-but-can-we-just-print-this
