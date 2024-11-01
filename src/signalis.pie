@@ -1,7 +1,7 @@
 #lang pie
 
-include(`src/lib/Collections.pie')
 include(`src/lib/Logic.pie')
+include(`src/lib/Collections.pie')
 include(`src/lib/Math.pie')
 include(`src/lib/Tuples.pie')
 

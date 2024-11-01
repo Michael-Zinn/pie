@@ -61,13 +61,33 @@
 (claim  Maybe.flatMap (Pi     ([A U] [B U]) (->      (-> A (Maybe B)) (Maybe A)    (Maybe                B                 ))))
 (define Maybe.flatMap (lambda ( A     B   ) (lambda (f                maybeA   )   (Either.flatMapLeft A B Trivial f maybeA))))
 
+(claim  ind-Maybe (Pi     ((ValueT U) (ResultT U)) (-> (Maybe ValueT) (-> ValueT ResultT) ResultT           ResultT)))
+(define ind-Maybe (lambda ( ValueT     ResultT         maybe          ifJustTransform     ifNothingValue)
+  (ind-Either
+    maybe
+    (lambda (oldEither) ResultT            )
+    (lambda (l        ) (ifJustTransform l))
+    (lambda (        r) ifNothingValue     )
+  )
+))
+
+(claim  just? (Pi ((_ U)) (-> (Maybe _)   Boolean )))
+(define just? (lambda (_ maybe)
+  (ind-Maybe _ Boolean ; from whatever to Boolean
+    maybe              ; maybe
+    (lambda (_) true)  ; if Just
+    false              ; if Nothing
+  )
+))
+
 
 
 ; == List ==
+
 (claim  List.first (Pi     ((E U)) (-> (List E)   (Maybe E))))
 (define List.first (lambda ( E         list    )
   (rec-List
-    list ; initial list
+    list        ; initial list
     (nothing E) ; empty list case
     (lambda (first rest recListResultForRestBaseStep) (just E first))
   )
@@ -76,9 +96,9 @@
 (claim  List.rest (Pi     ((E U)) (-> (List E)   (Maybe (List E)))))
 (define List.rest (lambda ( E         list    )
   (rec-List
-    list ; initial list
+    list               ; initial list
     (nothing (List E)) ; empty list case
-    (lambda (first rest recListResultForRestBaseStep) (just (List E) rest))
+    (lambda (first rest recListRestBaseStep) (just (List E) rest))
   )
 ))
 
@@ -95,7 +115,56 @@
 (define List.get (lambda ( E         index list    )
   (Maybe.flatMap (List E) E
     (List.first E) (List.drop E index list))))
-  
+
+(claim  List.empty? (Pi     ((_ U)) (-> (List _)  Boolean                    )))
+(define List.empty? (lambda ( _         list    )
+  (rec-List
+    list
+    true
+    (lambda (_ _ _) false)
+  )
+))
+
+(claim  List.size (Pi     ((E U)) (-> (List E)   Nat)))
+(define List.size (lambda ( E         list)
+  (rec-List
+    list
+    0
+    (lambda (first rest recListRestBaseStep) (add1 recListRestBaseStep))
+  )
+))
+
+(claim  ++ (Pi     ((E U)) (-> (List E) (List E)   (List E))))
+(define ++ (lambda ( E         listA    listB   )
+  (rec-List
+    listA
+    listB
+    (lambda (firstListA restListA recListRestBaseStep) 
+      (:: firstListA recListRestBaseStep)
+    )
+  )
+))
+
+(claim  snoc (Pi     ((E U)) (-> (List E) E   (List E))))
+(define snoc (lambda ( E         list     e)
+  (rec-List
+    list
+    (:: e nil)
+    (lambda (firstListA restListA recListRestBaseStep) 
+      (:: firstListA recListRestBaseStep)
+    )
+  )
+))
+
+(claim  reverse (Pi     ((E U)) (-> (List E)   (List E))))
+(define reverse (lambda ( E         list    )
+  (rec-List
+    list
+    (the (List E) nil)
+    (lambda (first rest recListRestBaseStep) (snoc E recListRestBaseStep first))
+  )
+))
+
 
 
 ; == Map ==
