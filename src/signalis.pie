@@ -53,7 +53,7 @@ include(`src/lib/Tuples.pie')
   nil))))
 
 ;It's not really playable yet, so lets print all rooms instead.
-rooms
+;rooms
 
 ;state ?
 (claim  location Atom)
@@ -67,16 +67,15 @@ rooms
 
 (claim example (Pair Atom (List (Pair Atom Nat))))
 (define example
+(the (Pair Atom (List (Pair Atom Nat)))
   (cons
     'This-is-the-description-text---What-do-you-want-to-do
-    (the (List (Pair Atom Nat))
     (:: (the (Pair Atom Nat) (cons 'do-this 123))
-        (:: (the (Pair Atom Nat) (cons 'do-thi-other-thing 456))
-            (the (List (Pair Atom Nat)) nil)
+        (:: (the (Pair Atom Nat)(cons 'do-thi-other-thing 456))
+            nil
         )
     ))
   )
 )
-example
 
-'okay-but-can-we-just-print-this
+example

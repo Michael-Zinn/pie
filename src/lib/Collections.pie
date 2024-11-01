@@ -34,9 +34,9 @@
 (define Either.flatMapRight (lambda ( LeftT     OldRightT     NewRightT   ) (lambda (f                                       either                  )
   (ind-Either
     either
-    (lambda (oldEither) (Either LeftT NewRightT))
-    (lambda (l) (left l))
-    (lambda (r) (f    r))
+    (lambda (oldEither) (Either LeftT  NewRightT))
+    (lambda (l        ) (       left l          ))
+    (lambda (r        ) (              f r      ))
   )
 )))
 
@@ -57,9 +57,45 @@
 (claim  Maybe.map     (Pi     ([A U] [B U]) (->      (-> A B        ) (Maybe A)    (Maybe                B                 ))))
 (define Maybe.map     (lambda ( A     B   ) (lambda (f                maybeA   )   (Either.mapLeft     A B Trivial f maybeA))))
 
+; flatMap an (-> A (Maybe B)) to a (Maybe A) to get a (Maybe B)
 (claim  Maybe.flatMap (Pi     ([A U] [B U]) (->      (-> A (Maybe B)) (Maybe A)    (Maybe                B                 ))))
 (define Maybe.flatMap (lambda ( A     B   ) (lambda (f                maybeA   )   (Either.flatMapLeft A B Trivial f maybeA))))
 
+
+
+; == List ==
+(claim  List.first (Pi     ((E U)) (-> (List E)   (Maybe E))))
+(define List.first (lambda ( E         list    )
+  (rec-List
+    list ; initial list
+    (nothing E) ; empty list case
+    (lambda (first rest recListResultForRestBaseStep) (just E first))
+  )
+))
+
+(claim  List.rest (Pi     ((E U)) (-> (List E)   (Maybe (List E)))))
+(define List.rest (lambda ( E         list    )
+  (rec-List
+    list ; initial list
+    (nothing (List E)) ; empty list case
+    (lambda (first rest recListResultForRestBaseStep) (just (List E) rest))
+  )
+))
+
+(claim  List.drop (Pi     ((E U)) (-> Nat   (List E)   (Maybe (List E)))))
+(define List.drop (lambda ( E         index list    )
+  (rec-Nat
+    index
+    (just (List E) list)
+    (lambda (index-1 result)  (Maybe.flatMap (List E) (List E) (List.rest E)  result))
+  )
+))
+
+(claim  List.get (Pi     ((E U)) (-> Nat   (List E)  (Maybe E))))
+(define List.get (lambda ( E         index list    )
+  (Maybe.flatMap (List E) E
+    (List.first E) (List.drop E index list))))
+  
 
 
 ; == Map ==

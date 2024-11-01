@@ -19,27 +19,27 @@
 
 (claim  + (->      Nat Nat   Nat))
 (define + (lambda (a   b  )
-  (rec-Nat 
+  (iter-Nat 
     a
     b
-    (lambda (a-1 result) (add1 result))
+    (lambda (result) (add1 result))
   )
 ))
 
 (claim  - (->      Nat Nat   (Maybe Nat)))
 (define - (lambda (a   b  )
-  (rec-Nat
+  (iter-Nat
     b
     (just Nat a)
-    (lambda (b-1 result) (Maybe.flatMap Nat Nat subtract1 result))
+    (lambda (result) (Maybe.flatMap Nat Nat subtract1 result))
   )
 ))
 
 (claim  * (->      Nat Nat   Nat))
 (define * (lambda (a   b  )
-  (rec-Nat
+  (iter-Nat
     a
     0
-    (lambda (a-1 result) (+ b result))
+    (lambda (result) (+ b result))
   )
 ))
