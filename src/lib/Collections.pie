@@ -1,5 +1,7 @@
-include(`src/lib/collections/Either.pie')
+; TODO add an m4 macro for comments, so that build specific comments don't show up in the built file. OTOH, nobody reads the fat file?
+include(`src/lib/collections/Either.pie') ; -
 include(`src/lib/collections/Maybe.pie')  ; requires Logic/Boolean
-include(`src/lib/collections/List.pie')   ; requires Maybe
-include(`src/lib/collections/Map.pie')
-include(`src/lib/collections/Tuple.pie')
+include(`src/lib/collections/List.pie')   ; requires Maybe, but the functions might be silly. Vec would not require Maybe
+include(`src/lib/collections/Map.pie')    ; requires Maybe
+include(`src/lib/collections/Tuple.pie')  ; -        (Could be reimplemented as MixedList type aliases, when MixedList exists.)
+include(`src/lib/collections/Vec.pie')    ; -

@@ -1,0 +1,6 @@
+; Returns the first element of the vector sized size-1 + 1
+(claim  Vec.first (Pi     ((E U) (size-1 Nat)) (-> (Vec E (add1 size-1))   E              )))
+(define Vec.first (lambda ( E     size-1           vec                  )  (head vec)     ))
+
+(claim  Vec.rest  (Pi     ((E U) (size-1 Nat)) (-> (Vec E (add1 size-1))   (Vec E size-1) )))
+(define Vec.rest  (lambda ( E     size-1           vec                  )  (tail vec)     ))

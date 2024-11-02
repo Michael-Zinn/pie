@@ -48,8 +48,8 @@
   )
 ))
 
-(claim  ++ (Pi     ((E U)) (-> (List E) (List E)   (List E))))
-(define ++ (lambda ( E         listA    listB   )
+(claim  List.concat (Pi     ((E U)) (-> (List E) (List E)   (List E))))
+(define List.concat (lambda ( E         listA    listB   )
   (rec-List
     listA
     listB
@@ -70,8 +70,8 @@
   )
 ))
 
-(claim  reverse (Pi     ((E U)) (-> (List E)   (List E))))
-(define reverse (lambda ( E         list    )
+(claim  List.reverse (Pi     ((E U)) (-> (List E)   (List E))))
+(define List.reverse (lambda ( E         list    )
   (rec-List
     list
     (the (List E) nil)

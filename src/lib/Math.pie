@@ -26,6 +26,7 @@
   )
 ))
 
+; TODO can subtract be defined with some Fin so that you can't subtract a larger number from a smaller one?
 (claim  - (->      Nat Nat   (Maybe Nat)))
 (define - (lambda (a   b  )
   (iter-Nat
