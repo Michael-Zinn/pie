@@ -1,6 +1,71 @@
 ; Returns the first element of the vector sized size-1 + 1
-(claim  Vec.first (Pi     ((E U) (size-1 Nat)) (-> (Vec E (add1 size-1))   E              )))
+(claim  Vec.first (Pi     ((E U) (size-1 Nat)) (-> (Vec E (add1 size-1))   E             )))
 (define Vec.first (lambda ( E     size-1           vec                  )  (head vec)     ))
 
-(claim  Vec.rest  (Pi     ((E U) (size-1 Nat)) (-> (Vec E (add1 size-1))   (Vec E size-1) )))
-(define Vec.rest  (lambda ( E     size-1           vec                  )  (tail vec)     ))
+(claim  Vec.rest (Pi     ((E U) (size-1 Nat)) (-> (Vec E (add1 size-1))   (Vec E size-1))))
+(define Vec.rest (lambda ( E     size-1           vec                  )  (tail vec)     ))
+
+
+
+; Vec.last
+
+; The base is used, when the Nat is zero. So, for the one element Vec.
+; This returns a function, that when applied to a one element vector, returns the first(=last) element.
+(claim  Vec.last.base   (Pi     ((E U))    (-> (Vec E (add1 zero))     E         )))
+(define Vec.last.base   (lambda ( E            vec)                    (head vec) ))
+
+; For a given element type and size, this motive returns the type of a function
+; that takes a one larger vector and returns an element.
+(claim  Vec.last.mot (->      U Nat     U                                      ))
+(define Vec.last.mot (lambda (E size-1) (-> (Vec E (add1 size-1))   E        ) ))
+
+(claim  Vec.last.step (Pi     ((E U) (size-1 Nat)) (-> (Vec.last.mot E size-1)   (Vec.last.mot E (add1 size-1)) )))
+(define Vec.last.step (lambda ( E     size-1           f                         )
+  (lambda (biggerVec) (f (tail biggerVec)  ))))
+
+(claim  Vec.last (Pi     ((E U) (size-1 Nat)) (-> (Vec E (add1 size-1))   E )))
+(define Vec.last (lambda ( E     size-1     )
+  (ind-Nat
+    size-1  ; target
+    (Vec.last.mot  E)
+    (Vec.last.base E)
+    (Vec.last.step E)
+  )
+))
+
+(claim  Vec.dropLast.mot  (->       U     Nat             U                                                   ))
+(define Vec.dropLast.mot  (lambda ( E     resultSize)     (-> (Vec E (add1 resultSize))   (Vec E resultSize) )))
+
+(claim  Vec.dropLast.step (Pi     ((E U) (resultSize Nat)) (-> (Vec.dropLast.mot E resultSize)   (Vec.dropLast.mot E (add1 resultSize)))))
+(define Vec.dropLast.step (lambda ( E     resultSize       f                                ) 
+  (lambda (vec) (vec:: (head vec) (f (tail vec))))
+))
+
+(claim  Vec.dropLast      (Pi     ((E U) (resultSize Nat)) (-> (Vec E (add1 resultSize))   (Vec E resultSize) )))
+(define Vec.dropLast      (lambda ( E     resultSize     )
+  (ind-Nat
+    resultSize
+    (Vec.dropLast.mot E)
+    (lambda (size1Vec) vecnil)
+    (Vec.dropLast.step E)
+  )
+))
+
+
+
+; Replicates the element times times.
+; Parameters:
+;   E       = Element Type
+;   times   = how many times to replicate
+;   element = what to replicate
+(claim  Vec.replicate (Pi     ((E U) (times Nat)) (-> E          (Vec E times) )))
+(define Vec.replicate (lambda ( E     times           element)
+  (ind-Nat
+    times
+    (lambda (times) (Vec E times))
+    vecnil
+    (lambda (n-1 previousVec ) ; should return something of type (mot (add1 n-1))
+      (vec:: element previousVec)
+    )
+  )
+))
