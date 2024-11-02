@@ -1,0 +1,35 @@
+(claim  Maybe   (->       U                      U                       ))
+(define Maybe   (lambda ( ValueT   )             (Either ValueT Trivial) ))
+
+(claim  nothing (Pi     ([ValueT U])             (Maybe  ValueT        ) ))
+(define nothing (lambda ( ValueT   )             (right         sole   ) ))
+
+(claim  just    (Pi     ([ValueT U]) (-> ValueT  (Maybe  ValueT        ))))
+(define just    (lambda ( ValueT         value ) (left   value         ) ))
+
+
+(claim  Maybe.map     (Pi     ([A U] [B U]) (->      (-> A B        ) (Maybe A)    (Maybe                B                 ))))
+(define Maybe.map     (lambda ( A     B   ) (lambda (f                maybeA   )   (Either.mapLeft     A B Trivial f maybeA))))
+
+; flatMap an (-> A (Maybe B)) to a (Maybe A) to get a (Maybe B)
+(claim  Maybe.flatMap (Pi     ([A U] [B U]) (->      (-> A (Maybe B)) (Maybe A)    (Maybe                B                 ))))
+(define Maybe.flatMap (lambda ( A     B   ) (lambda (f                maybeA   )   (Either.flatMapLeft A B Trivial f maybeA))))
+
+(claim  ind-Maybe (Pi     ((ValueT U) (ResultT U)) (-> (Maybe ValueT) (-> ValueT ResultT) ResultT           ResultT)))
+(define ind-Maybe (lambda ( ValueT     ResultT         maybe          ifJustTransform     ifNothingValue)
+  (ind-Either
+    maybe
+    (lambda (oldEither) ResultT            )
+    (lambda (l        ) (ifJustTransform l))
+    (lambda (        r) ifNothingValue     )
+  )
+))
+
+(claim  just? (Pi ((_ U)) (-> (Maybe _)   Boolean )))
+(define just? (lambda (_ maybe)
+  (ind-Maybe _ Boolean ; from whatever to Boolean
+    maybe              ; maybe
+    (lambda (_) true)  ; if Just
+    false              ; if Nothing
+  )
+))

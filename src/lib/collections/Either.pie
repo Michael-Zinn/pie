@@ -1,0 +1,39 @@
+(claim  Either.mapLeft (Pi     ([OldLeftT U] [NewLeftT U] [RightT U]) (->      (-> OldLeftT NewLeftT) (Either OldLeftT RightT)   (Either NewLeftT RightT))))
+(define Either.mapLeft (lambda ( OldLeftT     NewLeftT     RightT   ) (lambda (f                      either                  )
+  (ind-Either
+    either
+    (lambda (oldEither) (Either NewLeftT   RightT ))
+    (lambda (l        ) (       left (f l)        ))
+    (lambda (r        ) (                  right r))
+  )
+)))
+
+(claim  Either.mapRight (Pi     ([LeftT U] [OldRightT U] [NewRightT U]) (->      (-> OldRightT NewRightT) (Either LeftT OldRightT)   (Either LeftT NewRightT))))
+(define Either.mapRight (lambda ( LeftT     OldRightT     NewRightT   ) (lambda (f                        either                  )
+  (ind-Either
+    either
+    (lambda (oldEither) (Either LeftT  NewRightT  ))
+    (lambda (l        ) (       left l            ))
+    (lambda (r        ) (              right (f r)))
+  )
+)))
+
+(claim  Either.flatMapLeft (Pi     ([OldLeftT U] [NewLeftT U] [RightT U]) (->      (-> OldLeftT (Either NewLeftT RightT)) (Either OldLeftT RightT)   (Either NewLeftT RightT))))
+(define Either.flatMapLeft (lambda ( OldLeftT     NewLeftT     RightT   ) (lambda (f                                      either                  )
+  (ind-Either
+    either
+    (lambda (oldEither) (Either NewLeftT RightT ))
+    (lambda (l        ) (       f l             ))
+    (lambda (r        ) (                right r))
+  )
+)))
+
+(claim  Either.flatMapRight (Pi     ([LeftT U] [OldRightT U] [NewRightT U]) (->      (-> OldRightT (Either LeftT NewRightT)) (Either LeftT OldRightT)   (Either LeftT NewRightT))))
+(define Either.flatMapRight (lambda ( LeftT     OldRightT     NewRightT   ) (lambda (f                                       either                  )
+  (ind-Either
+    either
+    (lambda (oldEither) (Either LeftT  NewRightT))
+    (lambda (l        ) (       left l          ))
+    (lambda (r        ) (              f r      ))
+  )
+)))

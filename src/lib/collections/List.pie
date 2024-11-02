@@ -1,0 +1,80 @@
+(claim  List.first (Pi     ((E U)) (-> (List E)   (Maybe E))))
+(define List.first (lambda ( E         list    )
+  (rec-List
+    list        ; initial list
+    (nothing E) ; empty list case
+    (lambda (first rest recListResultForRestBaseStep) (just E first))
+  )
+))
+
+(claim  List.rest (Pi     ((E U)) (-> (List E)   (Maybe (List E)))))
+(define List.rest (lambda ( E         list    )
+  (rec-List
+    list               ; initial list
+    (nothing (List E)) ; empty list case
+    (lambda (first rest recListRestBaseStep) (just (List E) rest))
+  )
+))
+
+(claim  List.drop (Pi     ((E U)) (-> Nat   (List E)   (Maybe (List E)))))
+(define List.drop (lambda ( E         index list    )
+  (rec-Nat
+    index
+    (just (List E) list)
+    (lambda (index-1 result)  (Maybe.flatMap (List E) (List E) (List.rest E)  result))
+  )
+))
+
+(claim  List.get (Pi     ((E U)) (-> Nat   (List E)  (Maybe E))))
+(define List.get (lambda ( E         index list    )
+  (Maybe.flatMap (List E) E
+    (List.first E) (List.drop E index list))))
+
+(claim  List.empty? (Pi     ((_ U)) (-> (List _)  Boolean                    )))
+(define List.empty? (lambda ( _         list    )
+  (rec-List
+    list
+    true
+    (lambda (_ _ _) false)
+  )
+))
+
+(claim  List.size (Pi     ((E U)) (-> (List E)   Nat)))
+(define List.size (lambda ( E         list)
+  (rec-List
+    list
+    0
+    (lambda (first rest recListRestBaseStep) (add1 recListRestBaseStep))
+  )
+))
+
+(claim  ++ (Pi     ((E U)) (-> (List E) (List E)   (List E))))
+(define ++ (lambda ( E         listA    listB   )
+  (rec-List
+    listA
+    listB
+    (lambda (firstListA restListA recListRestBaseStep) 
+      (:: firstListA recListRestBaseStep)
+    )
+  )
+))
+
+(claim  snoc (Pi     ((E U)) (-> (List E) E   (List E))))
+(define snoc (lambda ( E         list     e)
+  (rec-List
+    list
+    (:: e nil)
+    (lambda (firstListA restListA recListRestBaseStep) 
+      (:: firstListA recListRestBaseStep)
+    )
+  )
+))
+
+(claim  reverse (Pi     ((E U)) (-> (List E)   (List E))))
+(define reverse (lambda ( E         list    )
+  (rec-List
+    list
+    (the (List E) nil)
+    (lambda (first rest recListRestBaseStep) (snoc E recListRestBaseStep first))
+  )
+))

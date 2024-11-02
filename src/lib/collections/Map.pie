@@ -1,0 +1,52 @@
+; Not sure how equality will work.
+(claim  Map (->                  U        U         U))
+(define Map (lambda            [ KeyT     ValueT   ]
+              (List (Pair        KeyT     ValueT   ))))
+
+; creates an empty map
+(claim  mapOf (Pi              ([KeyT U] [ValueT U])
+                (Map             KeyT     ValueT   )))
+(define mapOf (lambda          ( KeyT     ValueT   )
+                (the (List (Pair KeyT     ValueT   )) nil)))
+
+; TODO not implemented yet, but you can listcons a key value pair to a map, if you're careful enough to not insert duplicate keys.
+;(claim put (Pi ((KeyT U) (ValueT U))
+;             (-> KeyT ValueT   (Map KeyT ValueT)))) 
+;(define put (Pi ((KeyT U) (ValueT U)) TODO))
+
+; List -> Map
+(claim associateBy (Pi ([KeyT U] [ValueT U])
+  (->
+    (-> ValueT   KeyT)   ; key selector
+    (List ValueT)        ; values
+
+    (Map KeyT ValueT)))) ; result Map
+
+(define associateBy (lambda (KeyT ValueT) (lambda (keySelector values)
+  (rec-List
+    values
+    (mapOf KeyT ValueT)
+    (lambda (value values result)
+      (::
+        (the (Pair KeyT ValueT) (cons (keySelector value) value))
+        result))))))
+
+#;(claim get (Pi
+  ((KeyT U) (ValueT U))
+  (-> KeyT (Map KeyT ValueT)   (Maybe ValueT))))
+#;(define get (lambda (KeyT ValueT) (lambda (key map)
+  (rec-List
+    map
+    (TODO empty maybe)
+    (lambda (entry entries result)
+    (TODO if (car entry) == key) then (Just (cdr entry)) else result )
+    
+    )
+  )
+))
+
+#;(which-nat
+  5 ; target (Number to check)
+  'it-is-zero ; result if target is zero
+  (lambda (five-minus-one) 'it-is-not-zero) ; lambda to run with the predecessor of target, if target is not null
+)
