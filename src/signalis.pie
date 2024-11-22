@@ -1,5 +1,6 @@
 #lang pie
 
+; nclude(`src/syntax/record.m4')
 include(`src/lib/Logic.pie')
 include(`src/lib/Collections.pie')
 include(`src/lib/Math.pie')
@@ -8,16 +9,16 @@ include(`src/lib/Math.pie')
 
 ;{record Room
 ;  id Atom
-;  initial-description Atom
-;  later-description Atom
+;  initialDescription Atom
+;  laterDescription Atom
 ;  items (List Atom)
 ;  exits (List Atom)}
 
 (claim Room U)
 (define Room (Tuple5
-  Atom          ; room ID
-  Atom          ; initial description
-  Atom          ; later description
+  Atom          ; id
+  Atom          ; initialDescription
+  Atom          ; laterDescription
   (List Atom)   ; items
   (List Atom))) ; exits
 
@@ -26,14 +27,14 @@ include(`src/lib/Math.pie')
                  ((tuple5Of Atom Atom                Atom            (List Atom) (List Atom))
                             id   initialDescription laterDescription items       exits      )))   
 
-(claim .id                 (-> Room    Atom    ))(define .id                 (lambda (room) (car                  room    )))
-(claim .initialDescription (-> Room    Atom    ))(define .initialDescription (lambda (room) (car             (cdr room)   )))
-(claim .laterDescription   (-> Room    Atom    ))(define .laterDescription   (lambda (room) (car        (cdr (cdr room))  )))
-(claim .items              (-> Room (List Atom)))(define .items              (lambda (room) (car   (cdr (cdr (cdr room))) )))
-(claim .exits              (-> Room (List Atom)))(define .exits              (lambda (room)   (cdr (cdr (cdr (cdr room)))) ))
+(claim Room.id                 (-> Room    Atom    ))(define Room.id                 (lambda (room) (car                  room    )))
+(claim Room.initialDescription (-> Room    Atom    ))(define Room.initialDescription (lambda (room) (car             (cdr room)   )))
+(claim Room.laterDescription   (-> Room    Atom    ))(define Room.laterDescription   (lambda (room) (car        (cdr (cdr room))  )))
+(claim Room.items              (-> Room (List Atom)))(define Room.items              (lambda (room) (car   (cdr (cdr (cdr room))) )))
+(claim Room.exits              (-> Room (List Atom)))(define Room.exits              (lambda (room)   (cdr (cdr (cdr (cdr room)))) ))
 
 (claim  rooms (Map Atom Room))
-(define rooms ((associateBy Atom Room) .id (::
+(define rooms ((associateBy Atom Room) Room.id (::
 
   (roomOf
     'Cryochamber 
